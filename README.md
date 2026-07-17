@@ -14,18 +14,26 @@ Point the CLI and SDK at a Redis you already run and get instant, real-time feat
 npm install -g zuweila
 ```
 
-### 2. Connect to Redis
+### 2. Set your environment variables
 
 ```bash
-zuweila init --redis redis://localhost:6379
-# Writes .zuweila.yml with your connection details
+export ZUWEILA_REDIS_URL=redis://localhost:6379
+export ZUWEILA_PREFIX=myapp:   # optional — defaults to 'zuweila:'
 ```
+
+Add these to your `.env`, shell profile, or CI secrets. No config file needed.
 
 ### 3. Create your first flag
 
 ```bash
 zuweila create new-checkout --description "New checkout flow"
 zuweila rollout new-checkout --percent 10
+```
+
+You can also override the prefix per-command:
+
+```bash
+zuweila --prefix staging: create new-checkout
 ```
 
 ### 4. Install the SDK in your app
@@ -85,7 +93,8 @@ The hash function is deterministic: the same user always gets the same result. R
 ## CLI Reference
 
 ```
-zuweila init [--redis <url>] [--prefix <prefix>]
+zuweila [--prefix <prefix>] <command>
+
 zuweila create <key> [--description <text>] [--disabled]
 zuweila list
 zuweila get <key>
@@ -237,14 +246,16 @@ Python, Go, or any other language can read flags directly from Redis using the p
 
 ## Configuration
 
-`.zuweila.yml` (written by `zuweila init`):
+No config file required. Everything is driven by environment variables:
 
-```yaml
-redis: redis://localhost:6379   # or ${ZUWEILA_REDIS_URL}
-prefix: zuweila:                # key namespace, default 'zuweila:'
-```
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `ZUWEILA_REDIS_URL` | Yes | — | Redis connection string |
+| `ZUWEILA_PREFIX` | No | `zuweila:` | Key namespace |
 
-Both the CLI and SDK respect the same prefix. If they are configured with different prefixes they will silently operate on disjoint keysets — use `zuweila init` to set it once and commit the file.
+Set these in your shell profile, `.env` file, CI secrets, or Kubernetes environment. The `--prefix` flag on the CLI overrides `ZUWEILA_PREFIX` for a single invocation.
+
+Both the CLI and SDK must use the same prefix to see the same flags. Mismatched prefixes result in silently disjoint keysets.
 
 ---
 
