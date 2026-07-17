@@ -54,3 +54,46 @@ jobs:
         run: npm run test --workspace=zuweila-core
         env:
           ZUWEILA_REDIS_URL: redis://localhost:6379
+
+  publish:
+    name: Publish to npm
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish zuweila-sdk (if version is new)
+        working-directory: zuweila-sdk
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view zuweila-sdk@$VERSION > /dev/null 2>&1; then
+            echo "zuweila-sdk@$VERSION already published — skipping"
+          else
+            npm publish --ignore-scripts
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish zuweila CLI (if version is new)
+        working-directory: zuweila-cli
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view zuweila@$VERSION > /dev/null 2>&1; then
+            echo "zuweila@$VERSION already published — skipping"
+          else
+            npm publish --ignore-scripts
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
