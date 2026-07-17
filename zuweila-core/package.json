@@ -1,0 +1,21 @@
+{
+  "name": "zuweila-core",
+  "version": "0.1.0",
+  "description": "Shared types, hashing, and evaluation logic for Zuweila",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "imurmurhash": "^0.1.4",
+    "ioredis": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/imurmurhash": "^0.1.4",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

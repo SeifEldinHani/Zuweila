@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build output — rebuilt by tsc before publish/deploy
+dist/
+
+# local Redis config (may contain credentials if user adds redis URL inline)
+# .zuweila.yml is safe to commit if it only references env vars — review before committing
+# .zuweila.yml
+
+# environment files
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+
+# editor
+.vscode/settings.json
+.idea/
+
+# test temp files
+*.tmp
+
+plans/
+
+.zuweila.yml
+zuweila_requirements.md

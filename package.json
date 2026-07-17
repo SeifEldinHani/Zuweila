@@ -1,0 +1,10 @@
+{
+  "name": "zuweila-workspace",
+  "private": true,
+  "workspaces": [
+    "zuweila-core",
+    "zuweila-sdk",
+    "zuweila-cli",
+    "examples/demo-app"
+  ]
+}
