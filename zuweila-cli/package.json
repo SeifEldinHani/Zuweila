@@ -1,16 +1,39 @@
 {
   "name": "zuweila",
   "version": "0.1.0",
-  "description": "Feature flags in your existing Redis",
+  "description": "Feature flags in your existing Redis — no server, no dashboard, no extra infrastructure",
+  "keywords": ["feature-flags", "redis", "feature-toggles", "cli", "devtools"],
+  "license": "MIT",
+  "author": "Seif El-Din Hani",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SeifEldinHani/Zuweila.git"
+  },
+  "homepage": "https://github.com/SeifEldinHani/Zuweila#readme",
+  "bugs": {
+    "url": "https://github.com/SeifEldinHani/Zuweila/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "bin": {
     "zuweila": "./dist/index.js"
   },
   "main": "./dist/index.js",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
     "commander": "^12.1.0",
