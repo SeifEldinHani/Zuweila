@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import Redis from 'ioredis';
-import { readConfig, getRedisUrl } from './config';
+import { getRedisUrl, getPrefix } from './config';
 import { WriteRedisAdapter } from './storage/redis-adapter';
-import { initCommand } from './commands/init';
 import { createCommand } from './commands/create';
 import { listCommand } from './commands/list';
 import { getCommand } from './commands/get';
@@ -22,32 +21,21 @@ const program = new Command();
 program
   .name('zuweila')
   .description('Feature flags in your existing Redis')
-  .version('0.1.0');
+  .version('0.1.0')
+  .option('--prefix <prefix>', 'Key prefix (overrides ZUWEILA_PREFIX env var)');
 
 async function withAdapter(fn: (adapter: WriteRedisAdapter) => Promise<void>): Promise<void> {
-  const config = readConfig();
+  const opts = program.opts<{ prefix?: string }>();
   const url = getRedisUrl();
+  const prefix = getPrefix(opts.prefix);
   const redis = new Redis(url);
-  const adapter = new WriteRedisAdapter(redis, config.prefix);
+  const adapter = new WriteRedisAdapter(redis, prefix);
   try {
     await fn(adapter);
   } finally {
     await adapter.disconnect();
   }
 }
-
-program
-  .command('init')
-  .description('Test Redis connection and write .zuweila.yml')
-  .option('--prefix <prefix>', 'Key prefix', 'zuweila:')
-  .action(async (options: { prefix: string }) => {
-    try {
-      await initCommand({ prefix: options.prefix });
-    } catch (err) {
-      console.error(`Error: ${(err as Error).message}`);
-      process.exit(1);
-    }
-  });
 
 program
   .command('create <key>')
