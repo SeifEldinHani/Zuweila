@@ -1,20 +1,58 @@
 {
   "name": "zuweila-sdk",
   "version": "0.1.0",
-  "description": "TypeScript SDK for Zuweila feature flags",
+  "description": "TypeScript SDK for Zuweila feature flags — real-time evaluation backed by Redis",
+  "keywords": [
+    "feature-flags",
+    "redis",
+    "feature-toggles",
+    "sdk",
+    "typescript",
+    "real-time"
+  ],
+  "license": "MIT",
+  "author": "Seif El-Din Hani",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SeifEldinHani/Zuweila.git",
+    "directory": "zuweila-sdk"
+  },
+  "homepage": "https://github.com/SeifEldinHani/Zuweila#readme",
+  "bugs": {
+    "url": "https://github.com/SeifEldinHani/Zuweila/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run --passWithNoTests"
+    "build": "tsup",
+    "test": "vitest run --passWithNoTests",
+    "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
-    "ioredis": "^5.4.1",
-    "zuweila-core": "^0.1.0"
+    "ioredis": "^5.4.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.5.0",
-    "vitest": "^2.0.0"
+    "vitest": "^2.0.0",
+    "zuweila-core": "*"
   }
 }
